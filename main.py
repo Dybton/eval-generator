@@ -66,8 +66,6 @@ async def hybrid_chunker():
         chunker = HybridChunker(include_images=True)
         chunks = list(chunker.chunk(doc))
 
-        print(chunks)
-
         return chunks
     except Exception as e:
         logger.error(f"Error hybrid chunking: {str(e)}")
@@ -82,11 +80,10 @@ async def save_markdown_w_i():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
 @app.get("/llama-markdown-parser")
 async def parse_it():
     try:
-        parsed_nodes = parse_document("exports/tmp5v9wgfpa-with-image-refs.md")
+        parsed_nodes = parse_document("parsed_files/parsed_kontrakt.md")
         output = {
             "nodes": [
                 {
@@ -102,4 +99,43 @@ async def parse_it():
         return output
     except Exception as e:
         logger.error(f"Error parsing markdown: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+@app.get("/parse-and-chunk")
+async def parse_and_chunk():
+    try:
+
+        file_name = "kontrakt.pdf"
+
+        url = f"files_to_chunk/{file_name}"
+        
+        converter = DocumentConverter()
+        result = converter.convert(url)
+        formatted_markdown = result.document.export_to_markdown()
+        
+        # Remove .pdf extension and create new filename
+        base_name = file_name.rsplit('.pdf', 1)[0]
+        temp_file = f"parsed_files/parsed_{base_name}.md"
+        with open(temp_file, 'w', encoding='utf-8') as f:
+            f.write(formatted_markdown)
+            
+
+        parsed_nodes = parse_document(temp_file)
+        output = {
+            "nodes": [
+                {
+                    "text": node.text,
+                    "metadata": node.metadata
+                } for node in parsed_nodes
+            ]
+        }
+        
+        with open(f"chunked_files/parsed_{base_name}.json", "w", encoding="utf-8") as f:
+            json.dump(output, f, indent=2)
+            
+        return output
+    except Exception as e:
+        logger.error(f"Error in parse-and-chunk endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
