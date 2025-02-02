@@ -13,12 +13,12 @@ class EvalDataset(TypedDict):
     awardCriteria: List[str]
     price: List[str]
 
-async def generate_eval_dataset(data: List[InputNode]) -> Dict[str, List[EvalDataset]]:
+async def generate_eval_dataset(data: List[InputNode], language: str) -> Dict[str, List[EvalDataset]]:
     eval_dataset: List[EvalDataset] = []
     
     for i, node in enumerate(data):
         print(f"Processing {i + 1}/{len(data)}")
-        requirements = await extract_requirements(node["text"])
+        requirements = await extract_requirements(node["text"], language)
         eval_dataset.append({
             "chunk": node["text"],
             **requirements

@@ -135,7 +135,9 @@ async def parse_and_chunk():
 @app.get("/generate-eval-dataset")
 async def handle_generate_eval_dataset():
     try:
-        raw_file_name = "Kontrakt.pdf"
+        
+        language = "en" # "en" or "dk"
+        raw_file_name = "SERC.pdf"
         file_path = f"files/1_raw_files/{raw_file_name}"
 
         parsed_markdown = await parse_document(file_path)
@@ -149,7 +151,7 @@ async def handle_generate_eval_dataset():
             } for node in chunked_nodes
         ]
         
-        eval_dataset = await generate_eval_dataset(formatted_nodes)
+        eval_dataset = await generate_eval_dataset(formatted_nodes[:30], language)
         return eval_dataset
         
     except Exception as e:
