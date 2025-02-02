@@ -1,5 +1,6 @@
 from eval.extract_requirements import extract_requirements
 from typing import TypedDict, List, Dict
+import asyncio
 
 class InputNode(TypedDict):
     text: str
@@ -14,14 +15,19 @@ class EvalDataset(TypedDict):
     price: List[str]
 
 async def generate_eval_dataset(data: List[InputNode], language: str) -> Dict[str, List[EvalDataset]]:
-    eval_dataset: List[EvalDataset] = []
-    
-    for i, node in enumerate(data):
-        print(f"Processing {i + 1}/{len(data)}")
-        requirements = await extract_requirements(node["text"], language)
-        eval_dataset.append({
-            "chunk": node["text"],
-            **requirements
-        })
-    
-    return {"message": "Dataset generated", "data": eval_dataset}
+    semaphore = asyncio.Semaphore(5)
+
+    async def process_node(node: InputNode, index: int) -> EvalDataset:
+        async with semaphore:
+            print(f"Processing {index + 1}/{len(data)}")
+            requirements = await extract_requirements(node["text"], language)
+            return {
+                "chunk": node["text"],
+                **requirements
+            }
+
+    tasks = [asyncio.create_task(process_node(node, i)) for i, node in enumerate(data)]
+
+    results = await asyncio.gather(*tasks)
+
+    return {"message": "Dataset generated", "data": results}

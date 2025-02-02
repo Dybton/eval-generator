@@ -47,7 +47,7 @@ async def convert_doc():
 @app.get("/hybrid-chunker")
 async def hybrid_chunker():
     try:
-        source = "https://arxiv.org/pdf/2408.09869"  # document per local path or URL
+        source = "files/1_raw_files/Kontrakt.pdf"  # document per local path or URL
 
         pipeline_options = PdfPipelineOptions()
         pipeline_options.images_scale = 1
@@ -64,7 +64,7 @@ async def hybrid_chunker():
 
         doc = result.document
     
-        chunker = HybridChunker(include_images=True)
+        chunker = HybridChunker(merge_peers=True, max_tokens=1000)
         chunks = list(chunker.chunk(doc))
 
         return chunks
@@ -135,15 +135,12 @@ async def parse_and_chunk():
 @app.get("/generate-eval-dataset")
 async def handle_generate_eval_dataset():
     try:
-        
         language = "en" # "en" or "dk"
         raw_file_name = "SERC.pdf"
         file_path = f"files/1_raw_files/{raw_file_name}"
 
         parsed_markdown = await parse_document(file_path)
-
         chunked_nodes = chunk_document(parsed_markdown)
-
         formatted_nodes = [
             {
                 "text": node.text,
@@ -152,6 +149,13 @@ async def handle_generate_eval_dataset():
         ]
         
         eval_dataset = await generate_eval_dataset(formatted_nodes[:30], language)
+        
+        # Save eval dataset to 4_enriched_files
+        base_name = raw_file_name.rsplit('.pdf', 1)[0]
+        output_path = f"files/4_enriched_files/eval_{base_name}.json"
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(eval_dataset, f, indent=2)
+        
         return eval_dataset
         
     except Exception as e:

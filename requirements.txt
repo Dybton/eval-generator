@@ -39,6 +39,7 @@ httpx==0.28.1
 huggingface-hub==0.27.1
 idna==3.10
 imageio==2.36.1
+importlib_metadata==8.5.0
 Jinja2==3.1.5
 jiter==0.8.2
 joblib==1.4.2
@@ -80,6 +81,9 @@ numpy==1.26.4
 openai==1.59.8
 opencv-python-headless==4.11.0.86
 openpyxl==3.1.5
+opentelemetry-api==1.29.0
+opentelemetry-sdk==1.29.0
+opentelemetry-semantic-conventions==0.50b0
 packaging==24.2
 pandas==2.2.3
 pillow==10.4.0
@@ -134,6 +138,7 @@ typer==0.12.5
 typing-inspect==0.9.0
 typing_extensions==4.12.2
 tzdata==2024.2
+unstructured-ingest==0.4.5
 urllib3==2.3.0
 uvicorn==0.34.0
 uvloop==0.21.0
@@ -142,3 +147,4 @@ websockets==14.1
 wrapt==1.17.2
 XlsxWriter==3.2.0
 yarl==1.18.3
+zipp==3.21.0
