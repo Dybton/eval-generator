@@ -1,16 +1,8 @@
-from llama_index.core import Document
-from llama_index.core.node_parser import MarkdownNodeParser
+from docling.document_converter import DocumentConverter
 
-def parse_document(path: str):
-    with open(path, "r", encoding="utf-8") as f:
-        markdown_text = f.read()
-
-    parser = MarkdownNodeParser()
-    documents = [Document(text=markdown_text, id_="doc_1")]
-
-    nodes = parser.get_nodes_from_documents(documents)
-
-    for node in nodes:
-        print(node)
-
-    return nodes
+async def parse_document(path: str):
+    converter = DocumentConverter()
+    result = converter.convert(path)
+    formatted_markdown = result.document.export_to_markdown()
+    
+    return formatted_markdown

@@ -15,9 +15,10 @@ from llama_index.core.node_parser import MarkdownNodeParser
 from llama_index.core.schema import Document
 
 from save_markdown_with_images import save_markdown_with_images
-from parse_document import parse_document
+from chunk_document import chunk_document
 import json
-
+from eval.generate_eval_dataset import generate_eval_dataset
+from parse_document import parse_document
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -71,29 +72,21 @@ async def hybrid_chunker():
         logger.error(f"Error hybrid chunking: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/save-markdown-with-images")
-async def save_markdown_w_i():
-    try:
-        save_markdown_with_images()
-    except Exception as e:
-        logger.error(f"Error saving markdown with images: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-
-@app.get("/llama-markdown-parser")
-async def parse_it():
+@app.get("/llama-markdown-chunker")
+async def handle_chunk_document():
     try:
-        parsed_nodes = parse_document("parsed_files/parsed_kontrakt.md")
+        nodes = chunk_document("files/2_parsed_files/parsed_kontrakt.md")
         output = {
             "nodes": [
                 {
                     "text": node.text,
                     "metadata": node.metadata
-                } for node in parsed_nodes
+                } for node in nodes
             ]
         }
         
-        with open("chunked_files/parsed_nodes.json", "w", encoding="utf-8") as f:
+        with open("files/3_chunked_files/parsed_nodes.json", "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2)
             
         return output
@@ -101,15 +94,13 @@ async def parse_it():
         logger.error(f"Error parsing markdown: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-
 @app.get("/parse-and-chunk")
 async def parse_and_chunk():
     try:
 
         file_name = "kontrakt.pdf"
 
-        url = f"files_to_chunk/{file_name}"
+        url = f"files/1_raw_files/{file_name}"
         
         converter = DocumentConverter()
         result = converter.convert(url)
@@ -117,7 +108,7 @@ async def parse_and_chunk():
         
         # Remove .pdf extension and create new filename
         base_name = file_name.rsplit('.pdf', 1)[0]
-        temp_file = f"parsed_files/parsed_{base_name}.md"
+        temp_file = f"files/2_parsed_files/parsed_{base_name}.md"
         with open(temp_file, 'w', encoding='utf-8') as f:
             f.write(formatted_markdown)
             
@@ -132,10 +123,35 @@ async def parse_and_chunk():
             ]
         }
         
-        with open(f"chunked_files/parsed_{base_name}.json", "w", encoding="utf-8") as f:
+        with open(f"files/3_chunked_files/parsed_{base_name}.json", "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2)
             
         return output
     except Exception as e:
         logger.error(f"Error in parse-and-chunk endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/generate-eval-dataset")
+async def handle_generate_eval_dataset():
+    try:
+        raw_file_name = "Kontrakt.pdf"
+        file_path = f"files/1_raw_files/{raw_file_name}"
+
+        parsed_markdown = await parse_document(file_path)
+
+        chunked_nodes = chunk_document(parsed_markdown)
+
+        formatted_nodes = [
+            {
+                "text": node.text,
+                "metadata": node.metadata
+            } for node in chunked_nodes
+        ]
+        
+        eval_dataset = await generate_eval_dataset(formatted_nodes)
+        return eval_dataset
+        
+    except Exception as e:
+        logger.error(f"Error generating eval dataset: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
