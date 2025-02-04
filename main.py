@@ -19,6 +19,9 @@ from chunk_document import chunk_document
 import json
 from eval.generate_eval_dataset import generate_eval_dataset
 from parse_document import parse_document
+from utils.saveFile import save_file
+from split_markdown_text import split_markdown_text
+from langchain.text_splitter import MarkdownTextSplitter
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -140,15 +143,19 @@ async def handle_generate_eval_dataset():
         file_path = f"files/1_raw_files/{raw_file_name}"
 
         parsed_markdown = await parse_document(file_path)
-        chunked_nodes = chunk_document(parsed_markdown)
+        
+        splitter = MarkdownTextSplitter(chunk_size=1000, chunk_overlap=250)
+        chunks = splitter.split_text(parsed_markdown)
+        
+        # Convert chunks to InputNode format
         formatted_nodes = [
             {
-                "text": node.text,
-                "metadata": node.metadata
-            } for node in chunked_nodes
+                "text": chunk,
+                "metadata": {}  # Add empty metadata dict
+            } for chunk in chunks
         ]
         
-        eval_dataset = await generate_eval_dataset(formatted_nodes[:30], language)
+        eval_dataset = await generate_eval_dataset(formatted_nodes, language)
         
         # Save eval dataset to 4_enriched_files
         base_name = raw_file_name.rsplit('.pdf', 1)[0]
@@ -161,3 +168,4 @@ async def handle_generate_eval_dataset():
     except Exception as e:
         logger.error(f"Error generating eval dataset: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
