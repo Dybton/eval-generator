@@ -20,7 +20,6 @@ import json
 from eval.generate_eval_dataset import generate_eval_dataset
 from parse_document import parse_document
 from utils.saveFile import save_file
-from split_markdown_text import split_markdown_text
 from langchain.text_splitter import MarkdownTextSplitter
 
 app = FastAPI()
@@ -169,3 +168,13 @@ async def handle_generate_eval_dataset():
         logger.error(f"Error generating eval dataset: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.get("/parse-and-chunk-pdf")
+async def handle_parse_and_chunk_pdf():
+    source = "https://arxiv.org/pdf/2408.09869"
+    
+    
+    converter = DocumentConverter()
+    result = converter.convert(source)
+    
+    return result.document
