@@ -21,6 +21,7 @@ from eval.generate_eval_dataset import generate_eval_dataset
 from parse_document import parse_document
 from utils.saveFile import save_file
 from langchain.text_splitter import MarkdownTextSplitter
+from utils.docling_langchain_rag import docling_langchain_rag
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -178,3 +179,8 @@ async def handle_parse_and_chunk_pdf():
     result = converter.convert(source)
     
     return result.document
+
+
+@app.get("/docling-langchain-rag")
+async def handle_docling_langchain_rag():
+    return docling_langchain_rag()
