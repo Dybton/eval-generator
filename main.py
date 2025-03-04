@@ -174,13 +174,35 @@ async def handle_generate_eval_dataset():
 async def handle_parse_and_chunk_pdf():
     source = "https://arxiv.org/pdf/2408.09869"
     
-    
-    converter = DocumentConverter()
+    # Configure pipeline options to include images
+    pipeline_options = PdfPipelineOptions()
+    pipeline_options.images_scale = 1
+    pipeline_options.generate_page_images = True
+    pipeline_options.generate_picture_images = True
+
+    converter = DocumentConverter(
+        format_options={
+            InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
+        }
+    )
     result = converter.convert(source)
-    
-    return result.document
+
+    chunker = HybridChunker()
+    chunk_iter = chunker.chunk(dl_doc=result.document)
+
+    counter = 0
+
+    for i, doc in enumerate(chunk_iter):
+        # print(f"\nSplit {i+1}:")
+        # print(f"  Content: {doc.page_content}")
+
+        if counter <= 3:
+            print(doc)
+            counter += 1
+
+    return result
 
 
 @app.get("/docling-langchain-rag")
 async def handle_docling_langchain_rag():
-    return docling_langchain_rag()
+    return docling_langchain_rag("https://ctserc.org/documents/news/2017-07-25-RFP_for%20_legal_SERC_July17.pdf")
