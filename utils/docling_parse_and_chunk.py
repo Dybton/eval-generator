@@ -5,8 +5,24 @@ from langchain_docling import DoclingLoader
 from docling.chunking import HybridChunker
 import json
 import uuid
+from typing import List, Dict, Any, TypedDict
 
 # https://ds4sd.github.io/docling/examples/rag_langchain/ - Check this one out for reference
+
+# Define type classes
+class BoundingBox(TypedDict):
+    l: float
+    t: float
+    r: float
+    b: float
+    coord_origin: str
+    page: int
+
+class ChunkMetadata(TypedDict):
+    id: str
+    text: str
+    page_numbers: List[int]
+    bounding_boxes: List[BoundingBox]
 
 def docling_parse_and_chunk(file_path):
     load_dotenv()
@@ -22,13 +38,13 @@ def docling_parse_and_chunk(file_path):
 
     docs = loader.load()
 
-    chunks_with_metadata = []
+    chunks_with_metadata: List[ChunkMetadata] = []
     
     # Print first few splits with bounding box and page number
     for i, doc in enumerate(docs):
         
         # Initialize the metadata object
-        chunk_metadata = {
+        chunk_metadata: ChunkMetadata = {
             "id": str(uuid.uuid4()),
             "text": doc.page_content,
             "page_numbers": [],
@@ -49,9 +65,15 @@ def docling_parse_and_chunk(file_path):
                             if 'page_no' in prov and 'bbox' in prov:
                                 
                                 page_no = prov['page_no']
-                                bbox = {
-                                    'page': page_no,
-                                    'coordinates': prov['bbox']
+                                # Create a properly typed BoundingBox
+                                bbox_data = prov['bbox']
+                                bbox: BoundingBox = {
+                                    'l': float(bbox_data.get('l', 0.0)),
+                                    't': float(bbox_data.get('t', 0.0)),
+                                    'r': float(bbox_data.get('r', 0.0)),
+                                    'b': float(bbox_data.get('b', 0.0)),
+                                    'coord_origin': bbox_data.get('coord_origin', 'BOTTOMLEFT'),
+                                    'page': page_no
                                 }
                                 chunk_metadata["bounding_boxes"].append(bbox)
                                 if page_no not in chunk_metadata["page_numbers"]:
