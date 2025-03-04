@@ -5,7 +5,7 @@ from langchain_docling import DoclingLoader
 from docling.chunking import HybridChunker
 import json
 import uuid
-from typing import List, Dict, Any, TypedDict
+from typing import List, TypedDict
 
 # https://ds4sd.github.io/docling/examples/rag_langchain/ - Check this one out for reference
 
