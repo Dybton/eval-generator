@@ -4,10 +4,11 @@ from langchain_docling.loader import ExportType
 from langchain_docling import DoclingLoader
 from docling.chunking import HybridChunker
 import json
+import uuid
 
 # https://ds4sd.github.io/docling/examples/rag_langchain/ - Check this one out for reference
 
-def docling_langchain_rag(file_path):
+def docling_parse_and_chunk(file_path):
     load_dotenv()
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -28,7 +29,7 @@ def docling_langchain_rag(file_path):
         
         # Initialize the metadata object
         chunk_metadata = {
-            "id": f"chunk_{i}",
+            "id": str(uuid.uuid4()),
             "text": doc.page_content,
             "page_numbers": [],
             "bounding_boxes": []
@@ -46,8 +47,12 @@ def docling_langchain_rag(file_path):
                     if 'prov' in item and item['prov']:
                         for prov in item['prov']:
                             if 'page_no' in prov and 'bbox' in prov:
+                                
                                 page_no = prov['page_no']
-                                bbox = prov['bbox']
+                                bbox = {
+                                    'page': page_no,
+                                    'coordinates': prov['bbox']
+                                }
                                 chunk_metadata["bounding_boxes"].append(bbox)
                                 if page_no not in chunk_metadata["page_numbers"]:
                                     chunk_metadata["page_numbers"].append(page_no)
