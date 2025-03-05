@@ -11,7 +11,7 @@ class EvalDataset(TypedDict):
     practical: List[str]
     solution: List[str]
     timeline: List[str]
-    awardCriteria: List[str]
+    award_criteria: List[str]
     price: List[str]
 
 async def generate_eval_dataset(data: List[InputNode], language: str) -> Dict[str, List[EvalDataset]]:

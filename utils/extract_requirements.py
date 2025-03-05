@@ -6,13 +6,13 @@ class Requirements(TypedDict):
     practical: List[str]
     solution: List[str]
     timeline: List[str]
-    awardCriteria: List[str]
+    award_criteria: List[str]
     price: List[str]
 
 client = AsyncOpenAI()
 
 async def extract_requirements(text: str, language: str) -> Requirements:
-    practical, solution, timeline, awardCriteria, price = await asyncio.gather(
+    practical, solution, timeline, award_criteria, price = await asyncio.gather(
         extract_practical_requirements(text, language),
         extract_solution_requirements(text, language),
         extract_timeline_requirements(text, language),
@@ -38,7 +38,7 @@ TIMELINE:
 {timeline}
 
 AWARD CRITERIA:
-{awardCriteria}
+{award_criteria}
 
 PRICE:
 {price}
@@ -48,7 +48,7 @@ Format as:
     "practical": ["requirement 1", "requirement 2", ...],
     "solution": ["spec 1", "spec 2", ...],
     "timeline": ["date 1: action", "date 2: action", ...],
-    "awardCriteria": ["criteria 1", "criteria 2", ...],
+    "award_criteria": ["criteria 1", "criteria 2", ...],
     "price": ["price info 1", "price info 2", ...]
 }}
 
@@ -65,7 +65,7 @@ TIDSLINJE:
 {timeline}
 
 TILDELINGSKRITERIER:
-{awardCriteria}
+{award_criteria}
 
 PRIS:
 {price}
@@ -75,7 +75,7 @@ Formater som følgende:
     "practical": ["krav 1", "krav 2", ...],
     "solution": ["spec 1", "spec 2", ...],
     "timeline": ["dato 1: handling", "dato 2: handling", ...],
-    "awardCriteria": ["kriterie 1", "kriterie 2", ...],
+    "award_criteria": ["kriterie 1", "kriterie 2", ...],
     "price": ["pris info 1", "pris info 2", ...]
 }}
 
@@ -100,7 +100,7 @@ Vigtigt: Returnér tomme arrays ([]) for sektioner uden punkter eller data."""
         "practical": [],
         "solution": [],
         "timeline": [],
-        "awardCriteria": [],
+        "award_criteria": [],
         "price": []
     }
 

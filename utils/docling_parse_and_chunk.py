@@ -18,9 +18,9 @@ class BoundingBox(TypedDict):
     coord_origin: str
     page: int
 
-class ChunkMetadata(TypedDict):
+class DocumentChunk(TypedDict):
     id: str
-    text: str
+    chunk: str
     page_numbers: List[int]
     bounding_boxes: List[BoundingBox]
 
@@ -38,15 +38,15 @@ def docling_parse_and_chunk(file_path):
 
     docs = loader.load()
 
-    chunks_with_metadata: List[ChunkMetadata] = []
+    chunks_with_metadata: List[DocumentChunk] = []
     
     # Print first few splits with bounding box and page number
     for i, doc in enumerate(docs):
         
         # Initialize the metadata object
-        chunk_metadata: ChunkMetadata = {
+        chunk_metadata: DocumentChunk = {
             "id": str(uuid.uuid4()),
-            "text": doc.page_content,
+            "chunk": doc.page_content,
             "page_numbers": [],
             "bounding_boxes": []
         }
