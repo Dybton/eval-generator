@@ -11,12 +11,12 @@ class TenderInfo(TypedDict):
     solution: List[str]
     practical: List[str]
     timeline: List[str]
-    award_criteria: List[str]
+    awarding_criteria: List[str]
     price: List[str]
 
 def validate_tender_info(data: Dict[str, Any]) -> tuple[bool, str]:
     """Validate that the data adheres to the TenderInfo structure."""
-    required_keys = ["solution", "practical", "timeline", "award_criteria", "price"]
+    required_keys = ["solution", "practical", "timeline", "awarding_criteria", "price"]
     
     # Check if all required keys exist
     for key in required_keys:
@@ -73,7 +73,7 @@ async def extract_key_tender_info(tender_content: str) -> TenderInfo:
             "solution": tender_info.get("solution", []),
             "practical": tender_info.get("practical", []),
             "timeline": tender_info.get("timeline", []),
-            "award_criteria": tender_info.get("award_criteria", []),
+            "awarding_criteria": tender_info.get("awarding_criteria", []),
             "price": tender_info.get("price", [])
         }
         
@@ -86,6 +86,6 @@ async def extract_key_tender_info(tender_content: str) -> TenderInfo:
             "solution": [],
             "practical": [],
             "timeline": [],
-            "award_criteria": [],
+            "awarding_criteria": [],
             "price": []
         }

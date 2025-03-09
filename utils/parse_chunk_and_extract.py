@@ -5,10 +5,10 @@ from utils.docling_parse_and_chunk import docling_parse_and_chunk, DocumentChunk
 from utils.extract_key_tender_info import extract_key_tender_info, TenderInfo
 
 class EnrichedDocumentChunk(TypedDict):
-    id: str
+    id: str # Don't think we are using this
     chunk: str
     page_numbers: List[int]
-    bounding_boxes: List[dict]
+    bounding_boxes: List[dict] #CLEAN UP!
     extracted_information: TenderInfo
 
 async def parse_chunk_and_extract(url: str, max_concurrency: int = 5) -> List[EnrichedDocumentChunk]:
@@ -65,7 +65,7 @@ async def parse_chunk_and_extract(url: str, max_concurrency: int = 5) -> List[En
                         "solution": [],
                         "practical": [],
                         "timeline": [],
-                        "award_criteria": [],
+                        "awarding_criteria": [],
                         "price": []
                     }
                 }

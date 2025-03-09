@@ -76,7 +76,7 @@ Return your extracted details as a JSON object with the following structure:
 "solution": [],
 "practical": [],
 "timeline": [],
-"award_criteria": [],
+"awarding_criteria": [],
 "price": []
 }
 
@@ -98,6 +98,6 @@ Do not include any text or formatting outside the JSON object. Example:
 "timeline": [
 "August 18, 2017: Proposals must be submitted no later than 4:00 pm."
 ],
-"award_criteria": [],
+"awarding_criteria": [],
 "price": []
 }

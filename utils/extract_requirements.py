@@ -6,17 +6,17 @@ class Requirements(TypedDict):
     practical: List[str]
     solution: List[str]
     timeline: List[str]
-    award_criteria: List[str]
+    awarding_criteria: List[str]
     price: List[str]
 
 client = AsyncOpenAI()
 
 async def extract_requirements(text: str, language: str) -> Requirements:
-    practical, solution, timeline, award_criteria, price = await asyncio.gather(
+    practical, solution, timeline, awarding_criteria, price = await asyncio.gather(
         extract_practical_requirements(text, language),
         extract_solution_requirements(text, language),
         extract_timeline_requirements(text, language),
-        extract_award_criteria(text, language),
+        extract_awarding_criteria(text, language),
         extract_price_information(text, language)
     )
 
@@ -38,7 +38,7 @@ TIMELINE:
 {timeline}
 
 AWARD CRITERIA:
-{award_criteria}
+{awarding_criteria}
 
 PRICE:
 {price}
@@ -48,7 +48,7 @@ Format as:
     "practical": ["requirement 1", "requirement 2", ...],
     "solution": ["spec 1", "spec 2", ...],
     "timeline": ["date 1: action", "date 2: action", ...],
-    "award_criteria": ["criteria 1", "criteria 2", ...],
+    "awarding_criteria": ["criteria 1", "criteria 2", ...],
     "price": ["price info 1", "price info 2", ...]
 }}
 
@@ -65,7 +65,7 @@ TIDSLINJE:
 {timeline}
 
 TILDELINGSKRITERIER:
-{award_criteria}
+{awarding_criteria}
 
 PRIS:
 {price}
@@ -75,7 +75,7 @@ Formater som følgende:
     "practical": ["krav 1", "krav 2", ...],
     "solution": ["spec 1", "spec 2", ...],
     "timeline": ["dato 1: handling", "dato 2: handling", ...],
-    "award_criteria": ["kriterie 1", "kriterie 2", ...],
+    "awarding_criteria": ["kriterie 1", "kriterie 2", ...],
     "price": ["pris info 1", "pris info 2", ...]
 }}
 
@@ -100,7 +100,7 @@ Vigtigt: Returnér tomme arrays ([]) for sektioner uden punkter eller data."""
         "practical": [],
         "solution": [],
         "timeline": [],
-        "award_criteria": [],
+        "awarding_criteria": [],
         "price": []
     }
 
@@ -318,7 +318,7 @@ async def extract_timeline_requirements(text: str, language: str) -> str:
     except Exception:
         return ""
 
-async def extract_award_criteria(text: str, language: str) -> str:
+async def extract_awarding_criteria(text: str, language: str) -> str:
     system_content = {
         'en': (
             "You are a detail-oriented analyst focused on extracting award criteria. "
