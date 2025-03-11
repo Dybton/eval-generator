@@ -6,11 +6,11 @@ from utils.extract_key_tender_info import extract_key_tender_info, TenderInfo
 from utils.generate_embeddings import generate_embedding
 
 class EnrichedDocumentChunk(TypedDict):
-    id: str # Don't think we are using this
+    id: str
     chunk: str
     page_numbers: List[int]
     embedding: List[float]
-    bounding_boxes: List[dict] #CLEAN UP!
+    bounding_boxes: List[dict]
     extracted_information: TenderInfo
 
 async def parse_chunk_and_extract(url: str, max_concurrency: int = 5) -> List[EnrichedDocumentChunk]:
@@ -33,21 +33,19 @@ async def parse_chunk_and_extract(url: str, max_concurrency: int = 5) -> List[En
     document_chunks = docling_parse_and_chunk(url)
     print(f"Document parsing complete. Found {len(document_chunks)} chunks.")
     
-    # Step 2: Extract key tender information from each chunk concurrently
     enriched_chunks: List[EnrichedDocumentChunk] = []
     
-    # Create a semaphore to limit concurrency
+    # Create a pool of max_concurrency workers to process chunks concurrently
     semaphore = asyncio.Semaphore(max_concurrency)
     
     async def process_chunk(chunk, index, total):
-        async with semaphore:  # This limits concurrency
+        async with semaphore: # Here we specify that that the a process_chunk can only run if there is a free slot in the semaphore
             try:
                 print(f"Processing chunk {index+1}/{total} (ID: {chunk['id']})")
                 tender_info = await extract_key_tender_info(chunk["chunk"])
                 embedding = await generate_embedding(chunk["chunk"])
                 print(f"✓ Completed chunk {index+1}/{total} (ID: {chunk['id']})")
                 
-                # Create an enhanced document chunk with the extracted information
                 enriched_chunk: EnrichedDocumentChunk = {
                     "id": chunk["id"],
                     "chunk": chunk["chunk"],
@@ -75,29 +73,18 @@ async def parse_chunk_and_extract(url: str, max_concurrency: int = 5) -> List[En
                     }
                 }
     
-    # Create tasks for all chunks
+    # Create a list of tasks to process the chunks concurrently
     tasks = [
         process_chunk(chunk, i, len(document_chunks)) 
         for i, chunk in enumerate(document_chunks)
     ]
     
     print(f"Starting extraction of tender information from {len(tasks)} chunks (max {max_concurrency} at a time)...")
+    
     # Process chunks concurrently and gather results
     results = await asyncio.gather(*tasks)
+
+
     print("All chunks processed successfully!")
     
     return results
-
-# Helper function to run the async function
-def process_document(url: str, max_concurrency: int = 5) -> List[EnrichedDocumentChunk]:
-    """
-    Synchronous wrapper for parse_chunk_and_extract
-    
-    Args:
-        url: URL or file path to the document to process
-        max_concurrency: Maximum number of chunks to process concurrently
-        
-    Returns:
-        List of EnrichedDocumentChunk objects
-    """
-    return asyncio.run(parse_chunk_and_extract(url, max_concurrency))

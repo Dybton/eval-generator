@@ -1,0 +1,5 @@
+// File Organization Rules
+// 1. Imports at the top
+// 2. Types/interfaces next
+// 3. Helper functions
+// 4. Main component/function
