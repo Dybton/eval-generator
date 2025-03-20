@@ -11,13 +11,11 @@ from utils.parse_chunk_and_extract import parse_chunk_and_extract
 app = FastAPI()
 logger = logging.getLogger(__name__)
 
-
 @app.get("/parse-chunk-and-extract")
 async def handle_parse_chunk_and_extract(url: str):
     return await parse_chunk_and_extract(url)
 
 # TESTS
-
 @app.get("/docling-parse-and-chunk")
 async def handle_docling_parse_and_chunk():
     return docling_parse_and_chunk("https://htzmsmquezyqxwdjmftw.supabase.co/storage/v1/object/public/materials/materials/1741345615581-SERC.pdf")
