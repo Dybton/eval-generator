@@ -86,13 +86,18 @@ async def evaluate_insights(
     enriched_generated_insights = []
     enriched_expected_insights = []
 
-    for insight in generated_insights:
-        embedding = generate_embedding(insight.content)
+
+    all_contents = [insight.content for insight in generated_insights + expected_insights]
+    all_embeddings = generate_embedding(all_contents, batch=True)
+    
+
+    for i, insight in  enumerate(generated_insights):
+        embedding = all_embeddings[i]
         insight.embeddings = embedding
         enriched_generated_insights.append(insight)
 
-    for insight in expected_insights:
-        embedding = generate_embedding(insight.content)
+    for i, insight in enumerate(expected_insights):
+        embedding = all_embeddings[i + len(generated_insights)]
         insight.embeddings = embedding
         enriched_expected_insights.append(insight)
 
@@ -108,23 +113,46 @@ async def evaluate_insights(
                 
             if cosine_similarity(generated.embeddings, expected.embeddings) >= SIMILARITY_THRESHOLD:
                 comparison_pairs.append((gen_idx, exp_idx, generated, expected))
+            
+
 
     extracted_insights_without_match = []
     eval_insights_without_match = []
     true_positive = 0
     matched_insights = []
+
+    matched_generated_indices = set()
+    matched_expected_indices = set()
     
     for gen_idx, exp_idx, generated, expected in comparison_pairs:
         is_match = await judge_insight_pair(generated, expected)
         if is_match:
-            true_positive += 1
+            matched_generated_indices.add(gen_idx)
+            matched_expected_indices.add(exp_idx)
             matched_insights.append(MatchedInsightPair(generated=generated, expected=expected))
         else:
             extracted_insights_without_match.append(generated)
             eval_insights_without_match.append(expected)
 
-    false_positive = len(extracted_insights_without_match)
-    false_negative = len(eval_insights_without_match)
+    # Set of indices of generated insights that are not matched
+    unmatched_generated_indices = set(range(len(enriched_generated_insights))) - matched_generated_indices
+    #get insight in enriched_generated_insights where index is not in matched_generated_indices
+    extracted_insights_without_match = [
+        insight for idx, insight in enumerate(enriched_generated_insights)
+        if idx not in matched_generated_indices
+    ]
+
+    # Set of indices of expected insights that are not matched
+    unmatched_expected_indices = set(range(len(enriched_expected_insights))) - matched_expected_indices
+    #get insight in enriched_expected_insights where index is not in matched_expected_indices
+    eval_insights_without_match = [
+        insight for idx, insight in enumerate(enriched_expected_insights)
+        if idx not in matched_expected_indices
+    ]
+    
+    true_positive = len(matched_generated_indices)
+    false_positive = len(enriched_generated_insights) - true_positive
+    false_negative = len(enriched_expected_insights) - len(matched_expected_indices)
 
     precision = (true_positive / (true_positive + false_positive)) if (true_positive + false_positive) else 0
     recall = (true_positive / (true_positive + false_negative)) if (true_positive + false_negative) else 0
