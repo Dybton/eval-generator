@@ -13,6 +13,7 @@ _log = logging.getLogger(__name__)
 
 IMAGE_RESOLUTION_SCALE = 2.0
 
+
 def save_markdown_with_images():
     logging.basicConfig(level=logging.INFO)
     
