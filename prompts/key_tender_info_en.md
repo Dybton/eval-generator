@@ -39,7 +39,7 @@ Extract information related to submission guidelines, formatting instructions, p
 Extract all deadline and schedule details. Only include entries if the tender explicitly states or approximates a date/event.
 
 - If a specific date is provided, use:`"Month Day, Year: Event description"`.
-- If the document states a time frame (e.g., “within X days/weeks after submission”), use this format.
+- If the document states a time frame (e.g., "within X days/weeks after submission"), use this format.
 - If no timeline events or deadlines are mentioned, leave this array empty.
 
 ---
@@ -86,18 +86,38 @@ Return your extracted details as a JSON object with the following structure:
 - If no relevant information is found for a particular category, simply return an **empty array (`[]`)**.
 - **Do not include placeholders** for items if there is no reference in the tender. Only list events that are explicitly mentioned.
 
-Do not include any text or formatting outside the JSON object. Example:
+## **CRITICAL REQUIREMENTS:**
+
+1. You MUST ALWAYS return a valid JSON object in the specified format, even if you can't find any information.
+2. NEVER apologize or explain that you couldn't find information - just return empty arrays.
+3. NEVER respond with text outside the JSON structure.
+4. If the provided text is incomplete, irrelevant, still return a valid JSON with empty arrays.
+5. DO NOT include any explanations, apologies, or requests for more information in your response.
+
+### **Examples of Valid Responses:**
+
+For a document with some information:
 
 {
-"solution": [],
+"solution": [
+"The contractor must provide a cloud-based case management system with role-based access."
+],
 "practical": [
-"Inquiries concerning this RFP should be mailed to Michelle Weaver, General Counsel, State Education Resource Center, 100 Roscommon Drive, Suite 110, Middletown, CT 06457 or e-mailed to: [weaver@ctserc.org](mailto:weaver@ctserc.org).",
-"Proposals must be submitted in a sealed envelope clearly marked in the lower left-hand corner with 'Request for Proposal 4:00 pm, August 18, 2017 SEALED PROPOSAL For Legal Services'.",
-"Late, unsealed proposals will not be considered."
+"Proposals must be submitted in a sealed envelope by August 18, 2017."
 ],
 "timeline": [
 "August 18, 2017: Proposals must be submitted no later than 4:00 pm."
 ],
+"awarding_criteria": [],
+"price": []
+}
+
+For a document with no relevant information or incomplete document:
+
+{
+"solution": [],
+"practical": [],
+"timeline": [],
 "awarding_criteria": [],
 "price": []
 }
