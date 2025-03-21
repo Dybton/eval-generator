@@ -1,6 +1,5 @@
 from openai import AsyncOpenAI
 from typing import List
-import asyncio
 import os
 import json
 from utils.files.read_file import read_file
@@ -18,7 +17,7 @@ client = AsyncOpenAI()
 async def extract_key_tender_info(tender_content: str) -> TenderInfo:
     system_content = read_file(os.path.join('prompts', 'key_tender_info_en.md'))
 
-    completion = client.chat.completions.create(
+    completion = await client.chat.completions.create(
         model="gpt-4o",
         temperature=0,
         response_format={"type": "json_object"},
@@ -35,19 +34,36 @@ async def extract_key_tender_info(tender_content: str) -> TenderInfo:
     )
 
     response_content = completion.choices[0].message.content
+
+    if not response_content:
+        print("No response content received")
+        return TenderInfo()
     
     try:
         # Parse the JSON response
         tender_info_dict = json.loads(response_content)
-        # Use Pydantic for validation and default values
-        return TenderInfo(**tender_info_dict)
-    except json.JSONDecodeError:
-        print("Warning: Response is not valid JSON")
+        
+        # Validate with Pydantic and return the model
+        tender_info = TenderInfo(**tender_info_dict)
+        
+
+        print(f"Successfully validated response with {len(tender_info.solution)} solution items, "
+              f"{len(tender_info.practical)} practical items, etc.")
+        
+        return tender_info
+        
+    except json.JSONDecodeError as json_err:
+        print(f"JSON parsing error: {str(json_err)}")
         print(f"Raw response: {response_content}")
-        # Return empty TenderInfo if JSON parsing fails
         return TenderInfo()
-    except Exception as e:
-        print(f"Error processing response: {str(e)}")
+        
+    except ValueError as val_err:
+        # This will catch Pydantic validation errors
+        print(f"Validation error: {str(val_err)}")
         print(f"Raw response: {response_content}")
-        # Return empty TenderInfo on any error
+        return TenderInfo()
+        
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        print(f"Raw response: {response_content}")
         return TenderInfo()

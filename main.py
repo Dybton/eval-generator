@@ -18,7 +18,7 @@ async def handle_parse_chunk_and_extract(url: str):
 # TESTS
 @app.get("/docling-parse-and-chunk")
 async def handle_docling_parse_and_chunk():
-    return docling_parse_and_chunk("https://htzmsmquezyqxwdjmftw.supabase.co/storage/v1/object/public/materials/materials/1741345615581-SERC.pdf")
+    return docling_parse_and_chunk("https://dekesjyuxgfmzfnyaoso.supabase.co/storage/v1/object/public/materials/company_54d3e42f-68da-43d4-8018-510d52f1b306/project_6c0976b0-cce0-46e1-bb4f-379455a81318/sources/d1c0963c-e984-4724-b354-3e77835160ca")
 
 
 @app.get("/extract-key-info")

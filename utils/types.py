@@ -2,15 +2,15 @@ from typing import List
 from pydantic import BaseModel
 
 class BoundingBox(BaseModel):
-    l: float = 0.0
-    t: float = 0.0 
-    r: float = 0.0
-    b: float = 0.0
-    coord_origin: str = "BOTTOMLEFT"
-    page: int = 0
+    left: float
+    top: float
+    right: float
+    bottom: float
+    coord_origin: str
+    page: int
 
 class DocumentChunk(BaseModel):
     id: str
     chunk: str
     page_numbers: List[int]
-    bounding_boxes: List[BoundingBox] 
+    bounding_boxes: List[BoundingBox]

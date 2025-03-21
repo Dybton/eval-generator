@@ -1,92 +1,116 @@
 import os
 from dotenv import load_dotenv
-from langchain_docling.loader import ExportType, DoclingLoader
-from docling_core.transforms.chunker.hybrid_chunker import HybridChunker
+from langchain_docling.loader import ExportType
+from langchain_docling import DoclingLoader
+from docling.chunking import HybridChunker
 import json
 import uuid
-from typing import List, Any, Dict, Union, cast
-
+from typing import List, Optional
 from pydantic import BaseModel
 from utils.types import BoundingBox, DocumentChunk
 
-# https://ds4sd.github.io/docling/examples/rag_langchain/ - Check this one out for reference
+class Bbox(BaseModel):
+    l: float
+    t: float
+    r: float
+    b: float
+    coord_origin: str
 
-
-class ProvData(BaseModel):
+class Prov(BaseModel):
     page_no: int
-    bbox: BoundingBox
+    bbox: Bbox
+    charspan: List[int]
 
 class DocItem(BaseModel):
-    prov: List[ProvData]
+    self_ref: str
+    parent: dict
+    children: List = []
+    label: str
+    prov: List[Prov]
 
+class Origin(BaseModel):
+    mimetype: str
+    binary_hash: float
+    filename: str
 
 class DlMeta(BaseModel):
     doc_items: List[DocItem]
+    headings: List[str]
+    origin: Origin
 
-class DocMetadata(BaseModel):
-    dl_meta: Union[str, DlMeta]
+class Metadata(BaseModel):
+    source: Optional[str] = None
+    dl_meta: DlMeta
+
+class Document(BaseModel):
+    id: Optional[int] = None
+    metadata: Metadata
+    page_content: str
+    type: str = "Document"
 
 
-def docling_parse_and_chunk(file_path: str) -> List[DocumentChunk]:
+def docling_parse_and_chunk(file_path):
     load_dotenv()
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-    EXPORT_TYPE = ExportType.DOC_CHUNKS
-
     loader = DoclingLoader(
         file_path=[file_path],
-        export_type=EXPORT_TYPE,
+        export_type=ExportType.DOC_CHUNKS,
         chunker=HybridChunker()
     )
 
     docs = loader.load()
-
     chunks_with_metadata: List[DocumentChunk] = []
     
-    # Process each split with bounding box and page number
     for doc in docs:
         
-        # Initialize the metadata object
-        chunk_metadata: DocumentChunk = DocumentChunk(
+        output_chunk_metadata = DocumentChunk(
             id=str(uuid.uuid4()),
             chunk=doc.page_content,
             page_numbers=[],
             bounding_boxes=[]
         )
 
-        metadata_dict = cast(Dict[str, Any], doc.metadata) # type: ignore
-        doc_metadata = DocMetadata.model_validate(metadata_dict)
+        try:
+            meta_dict = doc.metadata
+            #Check if dl_meta is a string and convert to dict if so with json.loads as the value
+            if isinstance(meta_dict.get('dl_meta'), str):
+                meta_dict['dl_meta'] = json.loads(meta_dict['dl_meta'])
 
-        # Extract bounding box and page number from metadata
-        if 'dl_meta' in doc_metadata:
-            dl_meta: Dict[str, Any] = doc_metadata['dl_meta']
-            if isinstance(dl_meta, str):
-                dl_meta = json.loads(dl_meta)
-                
-            # Extract all page numbers and bounding boxes from doc_items
-            if 'doc_items' in dl_meta and dl_meta['doc_items']:
-                for item in dl_meta['doc_items']:
-                    if 'prov' in item and item['prov']:
-                        for prov in item['prov']:
-                            if 'page_no' in prov and 'bbox' in prov:
-                                
-                                page_no = prov['page_no']
-                                # Create a properly typed BoundingBox
-                                bbox_data = prov['bbox']
-                                bbox = BoundingBox(
-                                    l=float(bbox_data.get('l', 0.0)),
-                                    t=float(bbox_data.get('t', 0.0)),
-                                    r=float(bbox_data.get('r', 0.0)),
-                                    b=float(bbox_data.get('b', 0.0)),
-                                    coord_origin=bbox_data.get('coord_origin', 'BOTTOMLEFT'),
-                                    page=page_no
-                                )
-                                chunk_metadata["bounding_boxes"].append(bbox)
-                                if page_no not in chunk_metadata["page_numbers"]:
-                                    chunk_metadata["page_numbers"].append(page_no)
-
-        # Add the chunk with its metadata to the list   
-        chunks_with_metadata.append(chunk_metadata)
+            metadata_obj = Metadata.model_validate(meta_dict)
+            
+            # Create a document dict with our expected structure
+            doc_dict = Document(
+                id=None,
+                metadata=metadata_obj,
+                page_content=doc.page_content,
+                type="Document"
+            )
+            
+            validated_doc = Document.model_validate(doc_dict)
+            
+            for item in validated_doc.metadata.dl_meta.doc_items:
+                for prov in item.prov:
+                    page_no = prov.page_no
+                    
+                    # Create a BoundingBox for output
+                    bbox = BoundingBox(
+                        left=prov.bbox.l,
+                        top=prov.bbox.t,
+                        right=prov.bbox.r,
+                        bottom=prov.bbox.b,
+                        coord_origin=prov.bbox.coord_origin,
+                        page=page_no
+                    )
+                    
+                    output_chunk_metadata.bounding_boxes.append(bbox)
+                    if page_no not in output_chunk_metadata.page_numbers:
+                        output_chunk_metadata.page_numbers.append(page_no)
+        
+        except Exception as e:
+            # Log validation error but keep the chunk with whatever data we have
+            print(f"Validation error: {str(e)}")
+        
+        chunks_with_metadata.append(output_chunk_metadata)
 
     return chunks_with_metadata
-
