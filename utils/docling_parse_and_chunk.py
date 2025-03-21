@@ -1,30 +1,33 @@
 import os
 from dotenv import load_dotenv
-from langchain_docling.loader import ExportType
-from langchain_docling import DoclingLoader
-from docling.chunking import HybridChunker
+from langchain_docling.loader import ExportType, DoclingLoader
+from docling_core.transforms.chunker.hybrid_chunker import HybridChunker
 import json
 import uuid
-from typing import List, TypedDict
+from typing import List, Any, Dict, Union, cast
+
+from pydantic import BaseModel
+from utils.types import BoundingBox, DocumentChunk
 
 # https://ds4sd.github.io/docling/examples/rag_langchain/ - Check this one out for reference
 
-# Define type classes
-class BoundingBox(TypedDict):
-    l: float
-    t: float
-    r: float
-    b: float
-    coord_origin: str
-    page: int
 
-class DocumentChunk(TypedDict):
-    id: str
-    chunk: str
-    page_numbers: List[int]
-    bounding_boxes: List[BoundingBox]
+class ProvData(BaseModel):
+    page_no: int
+    bbox: BoundingBox
 
-def docling_parse_and_chunk(file_path):
+class DocItem(BaseModel):
+    prov: List[ProvData]
+
+
+class DlMeta(BaseModel):
+    doc_items: List[DocItem]
+
+class DocMetadata(BaseModel):
+    dl_meta: Union[str, DlMeta]
+
+
+def docling_parse_and_chunk(file_path: str) -> List[DocumentChunk]:
     load_dotenv()
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -40,20 +43,23 @@ def docling_parse_and_chunk(file_path):
 
     chunks_with_metadata: List[DocumentChunk] = []
     
-    # Print first few splits with bounding box and page number
-    for i, doc in enumerate(docs):
+    # Process each split with bounding box and page number
+    for doc in docs:
         
         # Initialize the metadata object
-        chunk_metadata: DocumentChunk = {
-            "id": str(uuid.uuid4()),
-            "chunk": doc.page_content,
-            "page_numbers": [],
-            "bounding_boxes": []
-        }
+        chunk_metadata: DocumentChunk = DocumentChunk(
+            id=str(uuid.uuid4()),
+            chunk=doc.page_content,
+            page_numbers=[],
+            bounding_boxes=[]
+        )
+
+        metadata_dict = cast(Dict[str, Any], doc.metadata) # type: ignore
+        doc_metadata = DocMetadata.model_validate(metadata_dict)
 
         # Extract bounding box and page number from metadata
-        if 'dl_meta' in doc.metadata:
-            dl_meta = doc.metadata['dl_meta']
+        if 'dl_meta' in doc_metadata:
+            dl_meta: Dict[str, Any] = doc_metadata['dl_meta']
             if isinstance(dl_meta, str):
                 dl_meta = json.loads(dl_meta)
                 
@@ -67,14 +73,14 @@ def docling_parse_and_chunk(file_path):
                                 page_no = prov['page_no']
                                 # Create a properly typed BoundingBox
                                 bbox_data = prov['bbox']
-                                bbox: BoundingBox = {
-                                    'l': float(bbox_data.get('l', 0.0)),
-                                    't': float(bbox_data.get('t', 0.0)),
-                                    'r': float(bbox_data.get('r', 0.0)),
-                                    'b': float(bbox_data.get('b', 0.0)),
-                                    'coord_origin': bbox_data.get('coord_origin', 'BOTTOMLEFT'),
-                                    'page': page_no
-                                }
+                                bbox = BoundingBox(
+                                    l=float(bbox_data.get('l', 0.0)),
+                                    t=float(bbox_data.get('t', 0.0)),
+                                    r=float(bbox_data.get('r', 0.0)),
+                                    b=float(bbox_data.get('b', 0.0)),
+                                    coord_origin=bbox_data.get('coord_origin', 'BOTTOMLEFT'),
+                                    page=page_no
+                                )
                                 chunk_metadata["bounding_boxes"].append(bbox)
                                 if page_no not in chunk_metadata["page_numbers"]:
                                     chunk_metadata["page_numbers"].append(page_no)
