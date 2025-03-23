@@ -14,9 +14,9 @@ Extract details regarding the scope of work, deliverables, and key contractual o
 
 - **Project overview and background** (context, strategic goals) only if it directly relates to solution deliverables or obligations.
 - **Detailed scope of work and tangible deliverables** (tasks, equipment, services).
-- **Technical requirements and specifications** (functional features, performance metrics, integration needs).
+- **Technical requirements and specifications** (functional features, performance metrics, integration needs, dimensions and weight).
 - **Standards and compliance requirements** specifically related to the delivered solution (regulatory, quality, safety, environmental).
-- **Contractual obligations** (warranty, maintenance, SLAs, training, and documentation).
+- **Contractual obligations** (warranty, maintenance, SLAs, training, and documentation). ##### consider moving to practical requirements or remove.
 
 🚫 _Do not include general agency descriptions or background if they are not tied to specific deliverables or obligations._
 
@@ -26,10 +26,8 @@ Extract details regarding the scope of work, deliverables, and key contractual o
 
 Extract information related to submission guidelines, formatting instructions, procedural requirements, and general compliance. This includes:
 
-- **Submission format and document requirements** (e.g., PDF, number of copies, reference details).
+- **Submission format and document requirements** (e.g., PDF, number of copies, reference details, minimum font size, maximum number of pages).
 - **Administrative and procedural instructions** (e.g., submission channels, packaging, labeling, pre-bid meetings, site visits).
-- **General compliance requirements** (legal and regulatory adherence, mandatory declarations, bid bonds/financial guarantees).
-- **Eligibility requirements** (e.g., licensed attorneys, location-specific rules).
 - **Any additional logistics** for submitting the proposal.
 
 ---
@@ -48,11 +46,19 @@ Extract all deadline and schedule details. Only include entries if the tender ex
 
 Extract details related to how the bids will be evaluated. This includes:
 
-- **Evaluation methodology and weighting** (e.g., technical proposal, price, vendor experience).
-- **Technical and functional evaluation criteria** (compliance with specifications, quality, integration).
-- **Vendor qualifications and experience** (past projects, certifications, financial stability).
-- **Service and support capabilities** (after-sales support, warranties, SLAs).
+- **Evaluation methodology and weighting** (e.g., weighting of quality and price).
+- **Technical and functional evaluation criteria** (compliance with specifications, quality, integration, how each criteria is weighted).
 - **Any additional qualitative or quantitative factors** (innovation, risk mitigation).
+
+---
+
+### **Eligibility:**
+
+Extract details related to the eligibility of the tenderer. This includes:
+
+- **tenderer qualifications and experience** (past projects, credentials, certifications, financial stability, past financial performance).
+- **General compliance requirements** (legal and regulatory adherence, mandatory declarations, bid bonds/financial guarantees).
+- **Eligibility requirements** (e.g., licensed attorneys, location-specific rules).
 
 ---
 
@@ -60,11 +66,7 @@ Extract details related to how the bids will be evaluated. This includes:
 
 Extract all price and cost-related details. This includes:
 
-- Any references to the **total or approximate size of the contract** (e.g., overall payment structure, timing of payments, contract value).
-- **Detailed cost breakdown** (itemized pricing for hardware, software, labor, installation, training, maintenance).
-- **Pricing format and presentation guidelines** (lump sum vs. itemized, currency, tax considerations).
-- **Payment terms and schedules** (milestone payments, conditions for payment, retention or performance bonds).
-- **Budget constraints and any required financial securities** (bid bonds, cost revision terms).
+- **Maximum contract value** (i.e., the maximum price or contract value that the tenderer can invoice if the contract is won).
 
 ---
 
@@ -93,6 +95,8 @@ Return your extracted details as a JSON object with the following structure:
 3. NEVER respond with text outside the JSON structure.
 4. If the provided text is incomplete, irrelevant, still return a valid JSON with empty arrays.
 5. DO NOT include any explanations, apologies, or requests for more information in your response.
+
+----- NOTE TO JAKOB: Give real examples e.g., a full chunk and then tell it what it should extract from that!
 
 ### **Examples of Valid Responses:**
 
