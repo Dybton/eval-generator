@@ -1,3 +1,4 @@
+import json
 from fastapi import FastAPI, HTTPException, UploadFile, File
 import logging
 from docling.datamodel.pipeline_options import PdfPipelineOptions
@@ -7,13 +8,21 @@ from docling.document_converter import DocumentConverter
 from docling.chunking import HybridChunker
 from utils.docling_parse_and_chunk import docling_parse_and_chunk
 from utils.extract_key_tender_info import extract_key_tender_info
+from utils.files.read_file import read_file
 from utils.parse_chunk_and_extract import parse_chunk_and_extract
+
 app = FastAPI()
 logger = logging.getLogger(__name__)
 
 @app.get("/parse-chunk-and-extract")
 async def handle_parse_chunk_and_extract(url: str):
-    return await parse_chunk_and_extract(url)
+    test = False
+    if test:
+        json_str = read_file("files/parse_chunk_and_extract_test_output.json")
+        test_output = json.loads(json_str)
+        return test_output
+    else:
+        return await parse_chunk_and_extract(url)
 
 # TESTS
 @app.get("/docling-parse-and-chunk")
