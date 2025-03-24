@@ -6,11 +6,12 @@ from utils.files.read_file import read_file
 from pydantic import BaseModel, Field
 
 class TenderInfo(BaseModel):
-    solution: List[str] = Field(default_factory=list)
-    practical: List[str] = Field(default_factory=list)
+    solution_requirements: List[str] = Field(default_factory=list)
+    practical_requirements: List[str] = Field(default_factory=list)
+    eligibility: List[str] = Field(default_factory=list)
     timeline: List[str] = Field(default_factory=list)
     awarding_criteria: List[str] = Field(default_factory=list)
-    price: List[str] = Field(default_factory=list)
+    pricing: List[str] = Field(default_factory=list)
 
 client = AsyncOpenAI()
 
@@ -47,8 +48,8 @@ async def extract_key_tender_info(tender_content: str) -> TenderInfo:
         tender_info = TenderInfo(**tender_info_dict)
         
 
-        print(f"Successfully validated response with {len(tender_info.solution)} solution items, "
-              f"{len(tender_info.practical)} practical items, etc.")
+        print(f"Successfully validated response with {len(tender_info.solution_requirements)} solution items, "
+              f"{len(tender_info.practical_requirements)} practical items, etc.")
         
         return tender_info
         
