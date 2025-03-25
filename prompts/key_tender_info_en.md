@@ -17,7 +17,7 @@ Your goal is to analyze a tender document and extract all key information by cat
 
 ### **Solution Requirements:**
 
-Details regarding what must be delivered or performed by the vendor, including functional/technical specifications and product- or service-specific contractual obligations. If something describes the solution’s nature, performance, or deliverables, it goes here.
+Details regarding what must be delivered or performed by the vendor, including functional/technical specifications and product- or service-specific contractual obligations. If something describes the solution's nature, performance, or deliverables, it goes here.
 
 ## What to Extract:
 
@@ -29,12 +29,12 @@ Details regarding what must be delivered or performed by the vendor, including f
 # Technical Requirements & Specifications
 
 - Functional specifications (performance capabilities, features, throughput, concurrency, etc.).
-- Integration or compatibility needs (e.g., “Must interface with existing CRM”).
+- Integration or compatibility needs (e.g., "Must interface with existing CRM").
 - Non-functional requirements (reliability, security protocols, environmental conditions).
 
 # Standards & Compliance (Solution-Specific)
 
-- Regulations, certifications, or quality standards that apply to the product/service itself (e.g., CE marking, MIL-STD if it’s defense equipment).
+- Regulations, certifications, or quality standards that apply to the product/service itself (e.g., CE marking, MIL-STD if it's defense equipment).
 - Product safety/ environmental compliance (e.g., RoHS, energy efficiency, certain emissions standards).
 
 # Contractual Obligations Tied to the Solution
@@ -45,20 +45,20 @@ Details regarding what must be delivered or performed by the vendor, including f
 
 # Project Overview & Background (Only if It Informs Requirements)
 
-- Include context only if it changes or clarifies the solution’s design, deliverables, or technical needs.
+- Include context only if it changes or clarifies the solution's design, deliverables, or technical needs.
 
 ## Examples of In-Scope Items
 
-- “The system must support 500 concurrent users.”
-- “Hardware must operate in temperatures from -20°C to +50°C.”
-- “The vendor shall provide on-site training once per quarter for the first year.”
-- “Solution must comply with ISO 27001 for data encryption and cybersecurity.”
+- "The system must support 500 concurrent users."
+- "Hardware must operate in temperatures from -20°C to +50°C."
+- "The vendor shall provide on-site training once per quarter for the first year."
+- "Solution must comply with ISO 27001 for data encryption and cybersecurity."
 
 ## Examples of Out-of-Scope Items
 
-- Company Credentials: “The vendor must hold ISO 27001 certification at the organizational level.” (→ Eligibility Requirements)
-- Submission Format: “Proposals must be in PDF.” (→ Practical Requirements)
-- Project Timeline: “Milestone 1 is due June 1.” (→ Timeline)
+- Company Credentials: "The vendor must hold ISO 27001 certification at the organizational level." (→ Eligibility Requirements)
+- Submission Format: "Proposals must be in PDF." (→ Practical Requirements)
+- Project Timeline: "Milestone 1 is due June 1." (→ Timeline)
 - "The agency manages approximately 10,000 cases annually." (context only)
 - "The current system was implemented in 2010." (background only)
 
@@ -79,7 +79,7 @@ Requirements concerning how to prepare and submit the bid, along with the admini
 # Document Preparation & Format
 
 - Page limits, font size, required forms/annexes.
-- Clear instructions: “Must include cover letter on official letterhead.”
+- Clear instructions: "Must include cover letter on official letterhead."
 - Rejection Grounds (Format-based) if the tender explicitly states nonconformance leads to automatic disqualification.
 - Tender Documentation Verification: Instructions about which official documents form part of the tender
 
@@ -92,18 +92,18 @@ Requirements concerning how to prepare and submit the bid, along with the admini
 # Validity Periods & Bid Security
 
 - How long bids must remain valid (e.g., 90 days).
-- Any required bid bonds or deposits (when it’s a procedural guarantee rather than a reflection of the vendor’s financial status).
+- Any required bid bonds or deposits (when it's a procedural guarantee rather than a reflection of the vendor's financial status).
 
 # Communication & Clarifications
 
 - Process for submitting questions, Q&A deadlines, official contact details.
-- Mandatory bidder conferences or site visits (if they’re purely procedural steps before bidding).
-- Rejection Grounds: e.g., “Non-participation in mandatory site visit leads to disqualification.”
+- Mandatory bidder conferences or site visits (if they're purely procedural steps before bidding).
+- Rejection Grounds: e.g., "Non-participation in mandatory site visit leads to disqualification."
 
 # Administrative Non-Compliance & Discretionary Rejection
 
 - Missing documents, improperly formatted submissions, unauthorized changes, etc.
-- Distinguish mandatory (“shall be rejected”) vs. discretionary (“may be rejected”) language.
+- Distinguish mandatory ("shall be rejected") vs. discretionary ("may be rejected") language.
 
 # Legal & Regulatory Framework (Process-Focused)
 
@@ -111,15 +111,15 @@ Requirements concerning how to prepare and submit the bid, along with the admini
 
 ## Examples of In-Scope Items
 
-- “Proposals must be delivered in a sealed envelope with the tender reference on the front.”
-- “All questions must be submitted by March 15; responses will be posted on the e-portal.”
-- “Tenders that exceed 50 pages will be rejected.”
+- "Proposals must be delivered in a sealed envelope with the tender reference on the front."
+- "All questions must be submitted by March 15; responses will be posted on the e-portal."
+- "Tenders that exceed 50 pages will be rejected."
 
 # Examples of Out-of-Scope Items
 
-- Vendor Experience: “Bidders must have 5 years of experience.” (→ Eligibility Requirements)
-- Solution Specs: “Software must integrate with the current HR system.” (→ Solution Requirements)
-- Project Milestones: “Phase 1 must be completed by Q3.” (→ Timeline)
+- Vendor Experience: "Bidders must have 5 years of experience." (→ Eligibility Requirements)
+- Solution Specs: "Software must integrate with the current HR system." (→ Solution Requirements)
+- Project Milestones: "Phase 1 must be completed by Q3." (→ Timeline)
 
 When extracting practical requirements: 2. Look for natural groupings of related requirements 3. Combine requirements that fall under the same topic or procedure 4. Present them as coherent instructions rather than disconnected items
 
@@ -129,7 +129,7 @@ Aim for clarity and usefulness rather than listing every requirement as a separa
 
 ### **Eligibility Requirements:**
 
-Requirements focusing on WHO can submit the bid (the tenderer’s or vendor’s qualifications), including legal, financial, and professional capacity. If it disqualifies or qualifies the bidder as a company, it goes here.
+Requirements focusing on WHO can submit the bid (the tenderer's or vendor's qualifications), including legal, financial, and professional capacity. If it disqualifies or qualifies the bidder as a company, it goes here.
 
 ## What to Extract
 
@@ -141,12 +141,12 @@ Requirements focusing on WHO can submit the bid (the tenderer’s or vendor’s 
 # Financial Stability & Insurance
 
 - Turnover thresholds, financial statements, net worth, required insurance policies.
-- Rejection Grounds (Eligibility-based): e.g., “Bidders with < $2M annual turnover will be disqualified.”
+- Rejection Grounds (Eligibility-based): e.g., "Bidders with < $2M annual turnover will be disqualified."
 
 # Legal Status & Licensing
 
 - Business registration documents, permits, or specialized licenses.
-- Conflict of interest or debarment checks (e.g., “No bidder under bankruptcy proceedings can participate”).
+- Conflict of interest or debarment checks (e.g., "No bidder under bankruptcy proceedings can participate").
 
 # Certifications & Accreditations
 
@@ -167,14 +167,14 @@ Requirements focusing on WHO can submit the bid (the tenderer’s or vendor’s 
 
 ## Examples of In-Scope Items
 
-- “Bidders must demonstrate at least 3 similar projects in the last 5 years.”
-- “Companies must hold a valid ISO 9001 certificate.”
-- “Bidders must not be under investigation for financial misconduct.”
+- "Bidders must demonstrate at least 3 similar projects in the last 5 years."
+- "Companies must hold a valid ISO 9001 certificate."
+- "Bidders must not be under investigation for financial misconduct."
 
 ## Examples of Out-of-Scope Items
 
-- Solution Specs: “The hardware must comply with CE marking.” (→ Solution Requirements if it’s about the product itself.)
-- Submission Format: “Proposals must be in PDF.” (→ Practical Requirements)
+- Solution Specs: "The hardware must comply with CE marking." (→ Solution Requirements if it's about the product itself.)
+- Submission Format: "Proposals must be in PDF." (→ Practical Requirements)
 
 ### **Awarding Criteria:**
 
@@ -185,7 +185,7 @@ Details about how the contracting authority will evaluate qualified, compliant b
 # Evaluation Methodology & Process
 
 - Multi-stage evaluation, pass/fail checks, or best-value assessments.
-- “Lowest Price Technically Acceptable (LPTA)” or “Most Economically Advantageous Tender (MEAT).”
+- "Lowest Price Technically Acceptable (LPTA)" or "Most Economically Advantageous Tender (MEAT)."
 
 # Scoring Criteria & Weights
 
@@ -199,7 +199,7 @@ Details about how the contracting authority will evaluate qualified, compliant b
 
 # Minimum Score or Threshold Requirements
 
-- Technical or quality thresholds (e.g., “Bidders must achieve 70% in the technical evaluation to proceed”).
+- Technical or quality thresholds (e.g., "Bidders must achieve 70% in the technical evaluation to proceed").
 
 # Tie-Breaking & Negotiations
 
@@ -208,15 +208,15 @@ Details about how the contracting authority will evaluate qualified, compliant b
 
 ## Examples of In-Scope Items
 
-- “Price will account for 40% of the total score; technical solution for 50%; references for 10%.”
-- “Any proposal with a technical score under 70% will not advance to financial evaluation.”
-- “In case of a tie, preference will be given to the bidder with the higher technical score.”
+- "Price will account for 40% of the total score; technical solution for 50%; references for 10%."
+- "Any proposal with a technical score under 70% will not advance to financial evaluation."
+- "In case of a tie, preference will be given to the bidder with the higher technical score."
 
 ## Examples of Out-of-Scope Items
 
-- “Bidders must have $1M annual turnover.” (→ Eligibility Requirements)
-- “Include an executive summary in 12pt font.” (→ Practical Requirements)
-- “System must include automatic data backup.” (→ Solution Requirements)
+- "Bidders must have $1M annual turnover." (→ Eligibility Requirements)
+- "Include an executive summary in 12pt font." (→ Practical Requirements)
+- "System must include automatic data backup." (→ Solution Requirements)
 
 Extract details related to how the bids will be evaluated. This includes:
 
@@ -238,7 +238,7 @@ Aim for a clear representation of how proposals will be evaluated rather than an
 
 ### **Timeline:**
 
-All dates, deadlines, durations, or schedules explicitly stated in the tender, covering both the procurement process (e.g., submission cutoffs) and the project’s intended rollout or milestone dates.
+All dates, deadlines, durations, or schedules explicitly stated in the tender, covering both the procurement process (e.g., submission cutoffs) and the project's intended rollout or milestone dates.
 
 ## What to Extract
 
@@ -254,25 +254,30 @@ All dates, deadlines, durations, or schedules explicitly stated in the tender, c
 
 # Time Frames & Durations
 
-- Relative schedules if specific dates are not provided (e.g., “Within 30 days of contract signing”).
-- Warranties or support coverage periods in months/years, if they’re listed as timespans.
+- Relative schedules if specific dates are not provided (e.g., "Within 30 days of contract signing").
+- Warranties or support coverage periods in months/years, if they're listed as timespans.
 
 # Dependencies & Conditional Timelines
 
-- “Stage 2 starts only after successful completion of Stage 1.”
-- “Milestone 3 is contingent on receiving external regulatory approval.”
+- "Stage 2 starts only after successful completion of Stage 1."
+- "Milestone 3 is contingent on receiving external regulatory approval."
 
 ## Examples of In-Scope Items
 
-- “Bids must be submitted by 5:00 p.m. on March 15.”
-- “Pilot phase will run for 6 months starting from the award date.”
-- “Final delivery is expected by December 31.”
+- "Bids must be submitted by 5:00 p.m. on March 15."
+- "Pilot phase will run for 6 months starting from the award date."
+- "Final delivery is expected by December 31."
 
 ## Examples of Out-of-Scope Items
 
-- Solution Specs: “Requires a capacity of 10,000 concurrent sessions.” (→ Solution Requirements)
-- Vendor Qualifications: “Bidder must have done 3 prior projects in the last 5 years.” (→ Eligibility Requirements)
-- Admin Format: “Proposal must be in PDF.” (→ Practical Requirements)
+- Solution Specs: "Requires a capacity of 10,000 concurrent sessions." (→ Solution Requirements)
+- Vendor Qualifications: "Bidder must have done 3 prior projects in the last 5 years." (→ Eligibility Requirements)
+- Admin Format: "Proposal must be in PDF." (→ Practical Requirements)
+
+When extracting timeline criteria:
+If a specific date is provided, format as follows "Date: Month Day, Year: Event description".
+If the document states a time frame (e.g., "within X days/weeks after submission"), use this format.
+If no timeline events or deadlines are mentioned, leave this array empty.
 
 ### **Pricing:**
 
@@ -323,7 +328,7 @@ For a document with some information:
 "The tenderer must have completed at least three similar projects in the past five years."
 ],
 "timeline": [
-"August 18, 2017: Proposals must be submitted no later than 4:00 pm."
+"Date: August 18, 2017: Proposals must be submitted no later than 4:00 pm."
 ],
 "awarding_criteria": [
 "Technical capability will be weighted at 60% and price at 40% in the evaluation."
